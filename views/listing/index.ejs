@@ -1,0 +1,27 @@
+<% layout('/layout/boilerplate') -%>
+<body>
+
+   <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+    <% for(let dt of data ){ %>
+      <a href="/listing/<%= dt._id %> " style="text-decoration: none;" >
+        <div class="card col">
+          <img class="card-img-top" style="height: 20rem;" src="<%= dt.Image %>" alt="Card image cap">
+          <div class="card-body">
+            <p class="card-text">
+              <b><%= dt.title %></b> <br>
+              &#x20b9; &nbsp;<%= dt.price %>
+            </p>
+          </div>
+      </div>
+      </a>
+      <%  } %>
+   </div>
+
+    <!-- <ul>
+        <% for(let dt of data ){ %>
+          <li> <a href="/listing/<%= dt._id %>"><%= dt.title %></a></li>
+       <%  } %>
+    </ul> -->
+</body>
+
+
