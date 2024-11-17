@@ -92,7 +92,7 @@ app.use((req, res, next) => {
 })
 
 app.get("/", async function(req, res){
-    res.send("it,s a home route")
+    res.redirect("/listing")
 } )
 
 
