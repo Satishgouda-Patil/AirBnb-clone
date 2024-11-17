@@ -18,10 +18,10 @@ main()
 
 let db=async ()=>{
     await listing.deleteMany({})
-    let newData=dataInit.map(data=>({ ...data, owner:'66559ddebf63af96a288b591'}))
+    let newData=dataInit.map(data=>({ ...data, owner:'6656fcac4c2e77f35ea7f201'}))
     await listing.insertMany(newData)
     console.log("suc")
 }
 db();
 
-console.log("",dataInit.map(data=>({ ...data, owner:"6654b5a32683b9d42ed6adbb" })) )
+console.log("",dataInit.map(data=>({ ...data, owner:"6656fcac4c2e77f35ea7f201" })) )

@@ -10,10 +10,8 @@ route.post("/:id/review",isAuth,wrapasync(async (req,res)=>{
     let id=req.params.id;
     let review=req.body.Review;
     let newReview=new Review(review)
-    // console.log("",newReview)
     // newReview.by=req.user._id;y
     newReview.revOwner=req.user;
-    // console.log("",newReview)
     const listResult = await listing.findById(id)
     listResult.reviews.push(newReview)
     // console.log("result\n",listResult)
@@ -28,7 +26,7 @@ route.delete("/:id/review/:id1",isAuth,wrapasync(async (req,res)=>{
     let id=req.params.id;
     let {id1}=req.params;
     let result=await Review.findByIdAndDelete(id1);
-    req.flash("suc","A new review deleted successfully")
+    req.flash("suc","A  review deleted successfully")
     res.redirect(`/listing/${id}`)
 }))
 

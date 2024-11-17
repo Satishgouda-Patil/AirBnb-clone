@@ -1,15 +1,112 @@
 <% layout('/layout/boilerplate') -%>
+<style>
+  #sets{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.7rem;
+    /* justify-content: space-between; */
+    align-items: center;
+  }
+  #sets:hover{
+    opacity: 1;
+    cursor: pointer;
+  }
+  .icon{
+    text-align: center;
+  }
+  .cluster{
+    margin-right:1.7rem;
+    opacity: 0.7;
+    /* margin-left:16px; */
+  }
+  .cluster:hover{
+    opacity: 1;
+  }
+  .taxSwich{
+    display: flex;
+    align-items: center;
+    margin-right: 0;
+    padding: 0.8rem;
+    border: 0.5px solid black;
+    border-radius: 18px;
+    margin-left: 1rem;
+  }
+  .tax-info{
+    display: none;
+  }
+  
+</style>
 <body>
-
-   <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+   <div id="sets">
+      <div class="cluster">
+       <div class="icon"> <i class="fa-solid fa-person-booth"></i></div>
+       <span>room</span>
+      </div>
+      <div class="cluster">
+        <div class="icon"> <i class="fa-solid fa-fire"></i></div>
+        <span>trending</span>
+       </div>
+       <div class="cluster">
+        <div class="icon"><i class="fa-solid fa-tower-observation"></i></div>
+        <span>tower</span>
+       </div>
+       <div class="cluster">
+        <div class="icon"> <i class="fa-solid fa-ship"></i></div>
+        <span>boats</span>
+       </div>
+       <div class="cluster">
+        <div class="icon"> <i class="fa-solid fa-building"></i></div>
+        <span>top cities</span>
+       </div>
+       <div class="cluster">
+        <div class="icon"> <i class="fa-solid fa-mountain-sun"></i></div>
+        <span>mountain's</span>
+       </div>
+       <div class="cluster">
+        <div class="icon"> <i class="fa-solid fa-umbrella-beach"></i></div>
+        <span>beach</span>
+       </div>
+       <div class="cluster">
+        <div class="icon"> <i class="fa-solid fa-place-of-worship"></i></div>
+        <span>lake</span>
+       </div>
+       <div class="cluster">
+        <div class="icon"> <i class="fa-solid fa-mountain-sun"></i></div>
+        <span>mountain's</span>
+       </div>
+       <div class="cluster">
+        <div class="icon"> <i class="fa-solid fa-gamepad"></i></div>
+        <span>games</span>
+       </div>
+       <div class="cluster">
+        <div class="icon"> <i class="fa-solid fa-house"></i></div>
+        <span>tiny home</span>
+       </div>
+       <div class="cluster">
+        <div class="icon"> <i class="fa-solid fa-water-ladder"></i></div>
+        <span>pool</span>
+       </div>
+       <div class="cluster">
+        <div class="icon"> <i class="fa-solid fa-tower-cell"></i></div>
+        <span>Caves</span>
+       </div>
+       <div class="taxSwich">
+        <div class="form-check-reverse form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+          <label class="form-check-label" for="flexSwitchCheckDefault">Display total after taxes</label>
+        </div>
+       </div>
+   </div>
+   <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mainData">
     <% for(let dt of data ){ %>
       <a href="/listing/<%= dt._id %> " style="text-decoration: none;" >
         <div class="card col">
-          <img class="card-img-top" style="height: 20rem;" src="<%= dt.Image %>" alt="Card image cap">
+          <img class="card-img-top" style="height: 20rem;" src="<%= dt.Image.url %>" alt="Card image cap">
           <div class="card-body">
             <p class="card-text">
               <b><%= dt.title %></b> <br>
-              &#x20b9; &nbsp;<%= dt.price %>
+              &#x20b9; &nbsp;<%= dt.price %> / night
+              <i class="tax-info">&nbsp;&nbsp; +18% TAX</i>
             </p>
           </div>
       </div>
@@ -25,3 +122,16 @@
 </body>
 
 
+<script>
+  let taxes=document.getElementById("flexSwitchCheckDefault")
+  taxes.addEventListener("click",()=>{
+    let taxInfo=document.getElementsByClassName("tax-info")
+    for(info of taxInfo){
+      if(info.style.display!="inline"){
+        info.style.display="inline"
+      }else{
+        info.style.display="none"
+      }
+    }
+  })
+</script>

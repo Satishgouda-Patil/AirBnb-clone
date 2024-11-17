@@ -3,6 +3,9 @@ const route=express.Router()
 const app= express();
 const flash = require('connect-flash');
 const isAuth=require("../authMiddleware.js").isAuth;
+const multer  = require('multer')
+const {storage}=require("../cloudConfig.js");
+const upload = multer({ storage })
 // const path=require("path")
 // const methodOverride=require("method-override")
 // const ejsMate = require('ejs-mate');
@@ -15,7 +18,10 @@ const isAuth=require("../authMiddleware.js").isAuth;
 // Requirements for listing Routes
 const wrapasync=require("../util/wrapasync.js")
 const listing=require("../models/listeings.js")
-const Review=require("../models/review.js")
+const Review=require("../models/review.js");
+const { model } = require("mongoose");
+const path = require("path");
+const User = require("../models/user.js");
 
 // app.set("view engine","ejs")
 // app.set("views" ,path.join(__dirname,"../views") )
@@ -33,32 +39,55 @@ route.get("", async function(req, res,next){
    }
  )
 
+route.post("",async (req,res)=>{
+    let {search}=req.body;
+    let data1=await listing.find({});
+    let resData=data1.filter(d=>{
+        if(d.title.toLowerCase().includes(search.toLowerCase())){
+            return d;
+            // console.log(resData);
+        }
+        // console.log(d.title.toLowerCase()===search.toLowerCase());
+    })
+    console.log(resData)
+    if(resData){
+        res.render("listing/index.ejs",{data:resData})
+    }else{
+        req.flash("err","Not Found")
+         res.redirect("/listing")
+    }
+
+})
+
 route.get("/new",isAuth,(req,res,next)=>{
     res.render("listing/new.ejs")
  })
 
-route.post("", isAuth,wrapasync(
+route.post("/new", isAuth, upload.single('listing[Image]'),wrapasync(
     async (req,res,next)=>{
     let list=req.body.listing;
+    let url=req.file.path;
+    let filename=req.file.filename;
     if(!list){
-        throw new expressError(400,"send valid data")
+        throw new Error(400,"send valid data")
     }
 
     let newData=new listing(list)
+    newData.Image={url,filename}
     if(!newData.title){
-        throw new expressError("title is missing")
+        throw new Error("title is missing")
     }
 
     if(!newData.description){
-        throw new expressError("desc is missing")
+        throw new Error("desc is missing")
     }
 
     if(!newData.location){
-        throw new expressError("location is missing")
+        throw new Error("location is missing")
     }
 
     if(!newData.country){
-        throw new expressError("country is missing")
+        throw new Error("country is missing")
     }
     newData.owner=req.user._id;
     await newData.save()
@@ -67,7 +96,7 @@ route.post("", isAuth,wrapasync(
   })
  )
 
-route.get("/:id", 
+route.get("/:id", isAuth,
     wrapasync(
         async (req,res)=>{
             let {id}=req.params;
@@ -75,9 +104,9 @@ route.get("/:id",
                 path:"reviews",
                 populate:{
                     path:"revOwner",
+                    model:"User"
                 }
             }).populate("owner")
-            console.log(result)
             if(!result){
                 req.flash("err","A listing was deleted ")
                 res.redirect("/listing")
@@ -96,14 +125,19 @@ route.get("/:id/edit",isAuth,
                 req.flash("err","A listing not found!")
                 res.redirect("/listing")
             }
-            res.render("listing/edit.ejs",{result})
+            let url=result.Image.url;
+            url=url.replace("/upload","/upload/h_220,w_300")
+            res.render("listing/edit.ejs",{result,url})
         }
     )
 )
 
-route.put("/:id",isAuth,wrapasync(async (req,res)=>{
+route.put("/:id",isAuth,upload.single('listing[Image]'),wrapasync(async (req,res)=>{
     let {id}=req.params;
+    let url=req.file.path;
+    let filename=req.file.filename;
     let result=await listing.findByIdAndUpdate(id,{...req.body.listing});
+    result.Image={url,filename}
     if(!result){
         req.flash("err","A listing not found!")
         res.redirect("/dialogflow/textQuery")

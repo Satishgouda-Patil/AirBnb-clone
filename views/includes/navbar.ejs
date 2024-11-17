@@ -1,22 +1,58 @@
+<style>
+  .search{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  .btns{
+    background-color: #ff0000;
+    color: #fff;
+    padding: 0 1.5rem 0 1.5rem;
+    height: 2.5rem;
+    border: none;
+    border-radius: 25px ;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .btns i{
+    display: inline;
+    margin-right:0.25rem ;
+  }
+  .searchInput{
+    height: 2.5rem;
+    border-radius:25px ;
+    padding: 0 1.5rem 0 1.5rem;
+    display: flex;
+    align-items: center;
+  }
+</style>
 <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"></i></a>
+      <a class="navbar-brand" href="/listing"><i class="fa-regular fa-compass"></i></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-link "  href="/">Home</a>
-          <a class="nav-link" href="/listing">all listing</a>
-          <a class="nav-link" href="/listing/new">add new listing</a>
+          <a class="nav-link" href="/listing">Explore</a>
+        </div>
+        <div class="search navbar-nav ms-auto">
+          <form action="/listing" method="post" class="search">
+            <input class="form-control searchInput mr-sm-2" type="search" name="search" placeholder="Search destination" aria-label="Search">
+            <button class="btns my-2 my-sm-0" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+          </form>
         </div>
         <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="/listing/new">Your new home</a>
           <% if(isLogin){%>
-          <a class="nav-link" href="/auth/logout">Logout</a>
+          <b><a class="nav-link" href="/auth/logout">Logout</a></b>
           <% } %>
           <% if(!isLogin){%>
-          <a class="nav-link "  href="/auth/login">Login</a>
-          <a class="nav-link" href="/auth/register">Register</a>
+         <b> <a class="nav-link "  href="/auth/login">Login</a></b>
+         <b> <a class="nav-link" href="/auth/register">Register</a></b>
           <% } %>
         </div>
       </div>

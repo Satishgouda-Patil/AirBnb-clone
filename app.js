@@ -6,16 +6,18 @@ const methodOverride=require("method-override")
 const ejsMate = require('ejs-mate');
 const ejs=require("ejs")
 const session=require("express-session");
+const MongoStore = require('connect-mongo');
 const flash=require("connect-flash");
 const passport = require("passport");
 const User = require("./models/user.js");
-const route = express.Router();
-const wrapasync = require("./util/wrapasync.js");
 
+// const route = express.Router();
+// const wrapasync = require("./util/wrapasync.js");
 
+require('dotenv').config()
 // const User=require("./models/user.js")
-let mongoUrl="mongodb://127.0.0.1:27017/wanderlust";
-
+// let mongoUrl="mongodb://127.0.0.1:27017/wanderlust";
+let  db_url=process.env.ATLASDB_URL
 app.set("view engine","ejs")
 app.set("views" ,path.join(__dirname,"views") )
 app.use(express.urlencoded({extended:true}))
@@ -33,7 +35,7 @@ const userRoute=require("./routes/userRoute.js")
 
 //connecting to mongodb 
 async function main(){
-    await mongoose.connect(mongoUrl)
+    await mongoose.connect(db_url)
 }
 main()
     .then((req, res) =>{
@@ -45,10 +47,26 @@ main()
     })
 
 //using session
+const store=MongoStore.create({
+    mongoUrl: db_url,
+    crypto:{
+        secret:'abcd1234'
+    },
+    touchAfter:24*3600,
+})
+store.on("error",(err)=>{
+    console.log("error in mongo store",err)
+})
 app.use(session({
-    secret: 'your_secret_key',
+    store,
+    secret: 'abcd1234',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie:{
+        expires:Date.now()+7*24*60*60*1000,
+        maxAge:7*24*60*60*1000,
+        httpOnly:true,
+    }
 }));
 
 // using flash
